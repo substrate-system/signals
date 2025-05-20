@@ -130,6 +130,7 @@ export function createReactiveSystem ({
         let next = link.nextSub
         let stack:Stack<Link|undefined>|undefined
 
+        // eslint-disable-next-line
         top: do {
             const sub = link.sub
 
@@ -176,6 +177,7 @@ export function createReactiveSystem ({
                 stack = stack.prev
                 if (link !== undefined) {
                     next = link.nextSub
+                    // eslint-disable-next-line
                     continue top
                 }
             }
@@ -202,6 +204,7 @@ export function createReactiveSystem ({
         let stack: Stack<Link> | undefined
         let checkDepth = 0
 
+        // eslint-disable-next-line
         top: do {
             const dep = link.dep
             const depFlags = dep.flags
@@ -257,6 +260,7 @@ export function createReactiveSystem ({
                 sub = link.sub
                 if (link.nextDep !== undefined) {
                     link = link.nextDep
+                    // eslint-disable-next-line
                     continue top
                 }
                 dirty = false

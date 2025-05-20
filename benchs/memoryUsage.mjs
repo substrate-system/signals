@@ -1,51 +1,54 @@
-import { computed, effect, signal } from '../esm/index.mjs';
+// @ts-check
+import { computed, effect, signal } from '../dist/index.js'
 
-globalThis.gc();
-let start = process.memoryUsage().heapUsed;
+if (!globalThis.gc) throw new Error('not gc')
 
-const signals = Array.from({ length: 10000 }, () => signal(0));
+globalThis.gc()
+let start = process.memoryUsage().heapUsed
 
-globalThis.gc();
-let end = process.memoryUsage().heapUsed;
+const signals = Array.from({ length: 10000 }, () => signal(0))
 
-console.log(`signal: ${((end - start) / 1024).toFixed(2)} KB`);
+globalThis.gc()
+let end = process.memoryUsage().heapUsed
 
-start = end;
+console.log(`signal: ${((end - start) / 1024).toFixed(2)} KB`)
 
-const computeds = Array.from({ length: 10000 }, (_, i) => computed(() => signals[i]() + 1));
+start = end
 
-globalThis.gc();
-end = process.memoryUsage().heapUsed;
+const computeds = Array.from({ length: 10000 }, (_, i) => computed(() => signals[i]() + 1))
 
-console.log(`computed: ${((end - start) / 1024).toFixed(2)} KB`);
+globalThis.gc()
+end = process.memoryUsage().heapUsed
 
-start = end;
+console.log(`computed: ${((end - start) / 1024).toFixed(2)} KB`)
 
-Array.from({ length: 10000 }, (_, i) => effect(() => computeds[i]()));
+start = end
 
-globalThis.gc();
-end = process.memoryUsage().heapUsed;
+Array.from({ length: 10000 }, (_, i) => effect(() => computeds[i]()))
 
-console.log(`effect: ${((end - start) / 1024).toFixed(2)} KB`);
+globalThis.gc()
+end = process.memoryUsage().heapUsed
 
-start = end;
+console.log(`effect: ${((end - start) / 1024).toFixed(2)} KB`)
 
-const w = 100;
-const h = 100;
-const src = signal(1);
+start = end
+
+const w = 100
+const h = 100
+const src = signal(1)
 
 for (let i = 0; i < w; i++) {
-	let last = src;
-	for (let j = 0; j < h; j++) {
-		const prev = last;
-		last = computed(() => prev() + 1);
-		effect(() => last());
-	}
+    let last = src
+    for (let j = 0; j < h; j++) {
+        const prev = last
+        last = computed(() => prev() + 1)
+        effect(() => last())
+    }
 }
 
-src(src() + 1);
+src(src() + 1)
 
-globalThis.gc();
-end = process.memoryUsage().heapUsed;
+globalThis.gc()
+end = process.memoryUsage().heapUsed
 
-console.log(`tree: ${((end - start) / 1024).toFixed(2)} KB`);
+console.log(`tree: ${((end - start) / 1024).toFixed(2)} KB`)
