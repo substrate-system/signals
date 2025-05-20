@@ -1,20 +1,17 @@
-import { expect } from 'vitest';
-import { test } from 'vitest';
+import { expect, test } from 'vitest'
 
-declare function require(module: string): any;
+test('build: cjs', async () => {
+    const index = await import('../dist/index.js')
+    const system = await import('../dist/system.js')
 
-test('build: cjs', () => {
-	const index = require('../cjs/index.cjs');
-	const system = require('../cjs/system.cjs');
-
-	expect(typeof index.createReactiveSystem).toBe('function');
-	expect(typeof system.createReactiveSystem).toBe('function');
-});
+    expect(typeof index.createReactiveSystem).toBe('function')
+    expect(typeof system.createReactiveSystem).toBe('function')
+})
 
 test('build: esm', async () => {
-	const index = await import('../esm/index.mjs');
-	const system = await import('../esm/system.mjs');
+    const index = await import('../dist/index.js')
+    const system = await import('../dist/system.js')
 
-	expect(typeof index.createReactiveSystem).toBe('function');
-	expect(typeof system.createReactiveSystem).toBe('function');
-});
+    expect(typeof index.createReactiveSystem).toBe('function')
+    expect(typeof system.createReactiveSystem).toBe('function')
+})

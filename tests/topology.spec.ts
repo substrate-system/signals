@@ -1,10 +1,10 @@
-import { expect, test, vi, describe } from 'vitest';
-import {computed, effect, signal} from '../src';
+import { expect, test, vi, describe } from 'vitest'
+import { computed, effect, signal } from '../src'
 
 // To give access to .toHaveBeenCalledBefore()
-import * as matchers from 'jest-extended';
+import * as matchers from 'jest-extended'
 
-expect.extend(matchers);
+expect.extend(matchers)
 
 /** Tests adopted with thanks from preact-signals implementation at
  * https://github.com/preactjs/signals/blob/main/packages/core/test/signal.test.tsx
@@ -32,8 +32,7 @@ expect.extend(matchers);
  * SOFTWARE
  */
 
-describe("graph updates", () => {
-
+describe('graph updates', () => {
     test('should drop A->B->A updates', () => {
         //     A
         //   / |
@@ -42,23 +41,23 @@ describe("graph updates", () => {
         //     C
         //     |
         //     D
-        const a = signal(2);
+        const a = signal(2)
 
-        const b = computed(() => a() - 1);
-        const c = computed(() => a() + b());
+        const b = computed(() => a() - 1)
+        const c = computed(() => a() + b())
 
-        const compute = vi.fn(() => "d: " + c());
-        const d = computed(compute);
+        const compute = vi.fn(() => 'd: ' + c())
+        const d = computed(compute)
 
         // Trigger read
-        expect(d()).toBe("d: 3");
-        expect(compute).toHaveBeenCalledOnce();
-        compute.mockClear();
+        expect(d()).toBe('d: 3')
+        expect(compute).toHaveBeenCalledOnce()
+        compute.mockClear()
 
-        a(4);
-        d();
-        expect(compute).toHaveBeenCalledOnce();
-    });
+        a(4)
+        d()
+        expect(compute).toHaveBeenCalledOnce()
+    })
 
     test('should only update every signal once (diamond graph)', () => {
         // In this scenario "D" should only update once when "A" receives
@@ -69,20 +68,20 @@ describe("graph updates", () => {
         //   \   /
         //     D
 
-        const a = signal("a");
-        const b = computed(() => a());
-        const c = computed(() => a());
+        const a = signal('a')
+        const b = computed(() => a())
+        const c = computed(() => a())
 
-        const spy = vi.fn(() => b() + " " + c());
-        const d = computed(spy);
+        const spy = vi.fn(() => b() + ' ' + c())
+        const d = computed(spy)
 
-        expect(d()).toBe("a a");
-        expect(spy).toHaveBeenCalledOnce();
+        expect(d()).toBe('a a')
+        expect(spy).toHaveBeenCalledOnce()
 
-        a("aa");
-        expect(d()).toBe("aa aa");
-        expect(spy).toHaveBeenCalledTimes(2);
-    });
+        a('aa')
+        expect(d()).toBe('aa aa')
+        expect(spy).toHaveBeenCalledTimes(2)
+    })
 
     test('should only update every signal once (diamond graph + tail)', () => {
         // "E" will be likely updated twice if our mark+sweep logic is buggy.
@@ -94,42 +93,42 @@ describe("graph updates", () => {
         //     |
         //     E
 
-        const a = signal("a");
-        const b = computed(() => a());
-        const c = computed(() => a());
+        const a = signal('a')
+        const b = computed(() => a())
+        const c = computed(() => a())
 
-        const d = computed(() => b() + " " + c());
+        const d = computed(() => b() + ' ' + c())
 
-        const spy = vi.fn(() => d());
-        const e = computed(spy);
+        const spy = vi.fn(() => d())
+        const e = computed(spy)
 
-        expect(e()).toBe("a a");
-        expect(spy).toHaveBeenCalledOnce();
+        expect(e()).toBe('a a')
+        expect(spy).toHaveBeenCalledOnce()
 
-        a("aa");
-        expect(e()).toBe("aa aa");
-        expect(spy).toHaveBeenCalledTimes(2);
-    });
+        a('aa')
+        expect(e()).toBe('aa aa')
+        expect(spy).toHaveBeenCalledTimes(2)
+    })
 
     test('should bail out if result is the same', () => {
         // Bail out if value of "B" never changes
         // A->B->C
-        const a = signal("a");
+        const a = signal('a')
         const b = computed(() => {
-            a();
-            return "foo";
-        });
+            a()
+            return 'foo'
+        })
 
-        const spy = vi.fn(() => b());
-        const c = computed(spy);
+        const spy = vi.fn(() => b())
+        const c = computed(spy)
 
-        expect(c()).toBe("foo");
-        expect(spy).toHaveBeenCalledOnce();
+        expect(c()).toBe('foo')
+        expect(spy).toHaveBeenCalledOnce()
 
-        a("aa");
-        expect(c()).toBe("foo");
-        expect(spy).toHaveBeenCalledOnce();
-    });
+        a('aa')
+        expect(c()).toBe('foo')
+        expect(spy).toHaveBeenCalledOnce()
+    })
 
     test('should only update every signal once (jagged diamond graph + tails)', () => {
         // "F" and "G" will be likely updated twice if our mark+sweep logic is buggy.
@@ -142,80 +141,80 @@ describe("graph updates", () => {
         //     E
         //   /   \
         //  F     G
-        const a = signal("a");
+        const a = signal('a')
 
-        const b = computed(() => a());
-        const c = computed(() => a());
+        const b = computed(() => a())
+        const c = computed(() => a())
 
-        const d = computed(() => c());
+        const d = computed(() => c())
 
-        const eSpy = vi.fn(() => b() + " " + d());
-        const e = computed(eSpy);
+        const eSpy = vi.fn(() => b() + ' ' + d())
+        const e = computed(eSpy)
 
-        const fSpy = vi.fn(() => e());
-        const f = computed(fSpy);
-        const gSpy = vi.fn(() => e());
-        const g = computed(gSpy);
+        const fSpy = vi.fn(() => e())
+        const f = computed(fSpy)
+        const gSpy = vi.fn(() => e())
+        const g = computed(gSpy)
 
-        expect(f()).toBe("a a");
-        expect(fSpy).toHaveBeenCalledTimes(1);
+        expect(f()).toBe('a a')
+        expect(fSpy).toHaveBeenCalledTimes(1)
 
-        expect(g()).toBe("a a");
-        expect(gSpy).toHaveBeenCalledTimes(1);
+        expect(g()).toBe('a a')
+        expect(gSpy).toHaveBeenCalledTimes(1)
 
-        eSpy.mockClear();
-        fSpy.mockClear();
-        gSpy.mockClear();
+        eSpy.mockClear()
+        fSpy.mockClear()
+        gSpy.mockClear()
 
-        a("b");
+        a('b')
 
-        expect(e()).toBe("b b");
-        expect(eSpy).toHaveBeenCalledTimes(1);
+        expect(e()).toBe('b b')
+        expect(eSpy).toHaveBeenCalledTimes(1)
 
-        expect(f()).toBe("b b");
-        expect(fSpy).toHaveBeenCalledTimes(1);
+        expect(f()).toBe('b b')
+        expect(fSpy).toHaveBeenCalledTimes(1)
 
-        expect(g()).toBe("b b");
-        expect(gSpy).toHaveBeenCalledTimes(1);
+        expect(g()).toBe('b b')
+        expect(gSpy).toHaveBeenCalledTimes(1)
 
-        eSpy.mockClear();
-        fSpy.mockClear();
-        gSpy.mockClear();
+        eSpy.mockClear()
+        fSpy.mockClear()
+        gSpy.mockClear()
 
-        a("c");
+        a('c')
 
-        expect(e()).toBe("c c");
-        expect(eSpy).toHaveBeenCalledTimes(1);
+        expect(e()).toBe('c c')
+        expect(eSpy).toHaveBeenCalledTimes(1)
 
-        expect(f()).toBe("c c");
-        expect(fSpy).toHaveBeenCalledTimes(1);
+        expect(f()).toBe('c c')
+        expect(fSpy).toHaveBeenCalledTimes(1)
 
-        expect(g()).toBe("c c");
-        expect(gSpy).toHaveBeenCalledTimes(1);
+        expect(g()).toBe('c c')
+        expect(gSpy).toHaveBeenCalledTimes(1)
 
         // top to bottom
-        expect(eSpy).toHaveBeenCalledBefore(fSpy);
+        expect(eSpy).toHaveBeenCalledBefore(fSpy)
         // left to right
-        expect(fSpy).toHaveBeenCalledBefore(gSpy);
-    });
+        expect(fSpy).toHaveBeenCalledBefore(gSpy)
+    })
 
     test('should only subscribe to signals listened to', () => {
         //    *A
         //   /   \
         // *B     C <- we don't listen to C
-        const a = signal("a");
+        const a = signal('a')
 
-        const b = computed(() => a());
-        const spy = vi.fn(() => a());
-        computed(spy);
+        const b = computed(() => a())
+        const spy = vi.fn(() => a())
+        computed(spy)
 
-        expect(b()).toBe("a");
-        expect(spy).not.toHaveBeenCalled();
+        expect(b()).toBe('a')
+        expect(spy).not.toHaveBeenCalled()
 
-        a("aa");
-        expect(b()).toBe("aa");
-        expect(spy).not.toHaveBeenCalled();
-    });
+        a('aa')
+        expect(b()).toBe('aa')
+        expect(spy).not.toHaveBeenCalled()
+    })
 
     test('should only subscribe to signals listened to II', () => {
         // Here both "B" and "C" are active in the beginning, but
@@ -226,33 +225,33 @@ describe("graph updates", () => {
         // *B     D <- we don't listen to C
         //  |
         // *C
-        const a = signal("a");
-        const spyB = vi.fn(() => a());
-        const b = computed(spyB);
+        const a = signal('a')
+        const spyB = vi.fn(() => a())
+        const b = computed(spyB)
 
-        const spyC = vi.fn(() => b());
-        const c = computed(spyC);
+        const spyC = vi.fn(() => b())
+        const c = computed(spyC)
 
-        const d = computed(() => a());
+        const d = computed(() => a())
 
-        let result = "";
+        let result = ''
         const unsub = effect(() => {
-            result = c();
-        });
+            result = c()
+        })
 
-        expect(result).toBe("a");
-        expect(d()).toBe("a");
+        expect(result).toBe('a')
+        expect(d()).toBe('a')
 
-        spyB.mockClear();
-        spyC.mockClear();
-        unsub();
+        spyB.mockClear()
+        spyC.mockClear()
+        unsub()
 
-        a("aa");
+        a('aa')
 
-        expect(spyB).not.toHaveBeenCalled();
-        expect(spyC).not.toHaveBeenCalled();
-        expect(d()).toBe("aa");
-    });
+        expect(spyB).not.toHaveBeenCalled()
+        expect(spyC).not.toHaveBeenCalled()
+        expect(d()).toBe('aa')
+    })
 
     test('should ensure subs update even if one dep unmarks it', () => {
         // In this scenario "C" always returns the same value. When "A"
@@ -264,22 +263,22 @@ describe("graph updates", () => {
         //  B     *C <- returns same value every time
         //   \   /
         //     D
-        const a = signal("a");
-        const b = computed(() => a());
+        const a = signal('a')
+        const b = computed(() => a())
         const c = computed(() => {
-            a();
-            return "c";
-        });
-        const spy = vi.fn(() => b() + " " + c());
-        const d = computed(spy);
+            a()
+            return 'c'
+        })
+        const spy = vi.fn(() => b() + ' ' + c())
+        const d = computed(spy)
 
-        expect(d()).toBe("a c");
-        spy.mockClear();
+        expect(d()).toBe('a c')
+        spy.mockClear()
 
-        a("aa");
-        d();
-        expect(spy).toHaveReturnedWith("aa c");
-    });
+        a('aa')
+        d()
+        expect(spy).toHaveReturnedWith('aa c')
+    })
 
     test('should ensure subs update even if two deps unmark it', () => {
         // In this scenario both "C" and "D" always return the same
@@ -290,39 +289,39 @@ describe("graph updates", () => {
         //  B *C *D
         //   \ | /
         //     E
-        const a = signal("a");
-        const b = computed(() => a());
+        const a = signal('a')
+        const b = computed(() => a())
         const c = computed(() => {
-            a();
-            return "c";
-        });
+            a()
+            return 'c'
+        })
         const d = computed(() => {
-            a();
-            return "d";
-        });
-        const spy = vi.fn(() => b() + " " + c() + " " + d());
-        const e = computed(spy);
+            a()
+            return 'd'
+        })
+        const spy = vi.fn(() => b() + ' ' + c() + ' ' + d())
+        const e = computed(spy)
 
-        expect(e()).toBe("a c d");
-        spy.mockClear();
+        expect(e()).toBe('a c d')
+        spy.mockClear()
 
-        a("aa");
-        e();
-        expect(spy).toHaveReturnedWith("aa c d");
-    });
+        a('aa')
+        e()
+        expect(spy).toHaveReturnedWith('aa c d')
+    })
 
     test('should support lazy branches', () => {
-        const a = signal(0);
-        const b = computed(() => a());
-        const c = computed(() => (a() > 0 ? a() : b()));
+        const a = signal(0)
+        const b = computed(() => a())
+        const c = computed(() => (a() > 0 ? a() : b()))
 
-        expect(c()).toBe(0);
-        a(1);
-        expect(c()).toBe(1);
+        expect(c()).toBe(0)
+        a(1)
+        expect(c()).toBe(1)
 
-        a(0);
-        expect(c()).toBe(0);
-    });
+        a(0)
+        expect(c()).toBe(0)
+    })
 
     test('should not update a sub if all deps unmark it', () => {
         // In this scenario "B" and "C" always return the same value. When "A"
@@ -332,57 +331,54 @@ describe("graph updates", () => {
         // *B     *C
         //   \   /
         //     D
-        const a = signal("a");
+        const a = signal('a')
         const b = computed(() => {
-            a();
-            return "b";
-        });
+            a()
+            return 'b'
+        })
         const c = computed(() => {
-            a();
-            return "c";
-        });
-        const spy = vi.fn(() => b() + " " + c());
-        const d = computed(spy);
+            a()
+            return 'c'
+        })
+        const spy = vi.fn(() => b() + ' ' + c())
+        const d = computed(spy)
 
-        expect(d()).toBe("b c");
-        spy.mockClear();
+        expect(d()).toBe('b c')
+        spy.mockClear()
 
-        a("aa");
-        expect(spy).not.toHaveBeenCalled();
-    });
+        a('aa')
+        expect(spy).not.toHaveBeenCalled()
+    })
+})
 
-});
-
-describe("error handling", () => {
-
+describe('error handling', () => {
     test('should keep graph consistent on errors during activation', () => {
-        const a = signal(0);
+        const a = signal(0)
         const b = computed(() => {
-            throw new Error("fail");
-        });
-        const c = computed(() => a());
+            throw new Error('fail')
+        })
+        const c = computed(() => a())
 
-        expect(() => b()).toThrow("fail");
+        expect(() => b()).toThrow('fail')
 
-        a(1);
-        expect(c()).toBe(1);
-    });
+        a(1)
+        expect(c()).toBe(1)
+    })
 
     test('should keep graph consistent on errors in computeds', () => {
-        const a = signal(0);
+        const a = signal(0)
         const b = computed(() => {
-            if (a() === 1) throw new Error("fail");
-            return a();
-        });
-        const c = computed(() => b());
+            if (a() === 1) throw new Error('fail')
+            return a()
+        })
+        const c = computed(() => b())
 
-        expect(c()).toBe(0);
+        expect(c()).toBe(0)
 
-        a(1);
-        expect(() => b()).toThrow("fail");
+        a(1)
+        expect(() => b()).toThrow('fail')
 
-        a(2);
-        expect(c()).toBe(2);
-    });
-
-});
+        a(2)
+        expect(c()).toBe(2)
+    })
+})

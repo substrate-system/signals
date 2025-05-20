@@ -31,6 +31,7 @@
 		"url": "git+https://github.com/substrate-system/signals.git"
 	},
 	"scripts": {
+		"lint": "eslint \"./**/*.{ts,js}\"",
 		"check": "tsc --noEmit",
 		"//build": "node ./build.js",
 		"build": "mkdir -p ./dist && rm -rf ./dist/* && npm run build-cjs && npm run build-esm && npm run build-esm:min && npm run build-cjs:min",
@@ -39,7 +40,7 @@
 		"build-esm": "esbuild src/*.ts --format=esm --metafile=dist/meta.json --keep-names --tsconfig=tsconfig.build.json --outdir=./dist --sourcemap && tsc --emitDeclarationOnly --project tsconfig.build.json --outDir dist",
 		"build-esm:min": "esbuild ./src/*.ts --format=esm --keep-names --bundle --tsconfig=tsconfig.build.json --minify --out-extension:.js=.min.js --outdir=./dist --sourcemap",
 		"test": "npm run build && vitest run",
-		"lint": "tsslint --project tsconfig.json",
+		"//lint": "tsslint --project tsconfig.json",
 		"bench": "npm run build && node --jitless --expose-gc benchs/propagate.mjs",
 		"memory": "npm run build && node --expose-gc benchs/memoryUsage.mjs",
 		"version": "npm run toc && auto-changelog -p --template keepachangelog --breaking-pattern 'BREAKING CHANGE:' && git add CHANGELOG.md README.md",
@@ -50,7 +51,11 @@
 	"devDependencies": {
 		"@tsslint/cli": "latest",
 		"@tsslint/config": "latest",
+		"@typescript-eslint/eslint-plugin": "^8.32.1",
+		"@typescript-eslint/parser": "^8.32.1",
 		"esbuild": "^0.25.4",
+		"eslint": "^8.57.1",
+		"eslint-config-standard": "^17.1.0",
 		"jest-extended": "latest",
 		"mitata": "latest",
 		"typescript": "latest",
