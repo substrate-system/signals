@@ -1,66 +1,60 @@
 {
-	"name": "alien-signals",
+	"name": "@substrate-system/alien-signals",
 	"version": "2.0.5",
-	"license": "MIT",
 	"description": "The lightest signal library.",
-	"packageManager": "pnpm@9.12.0",
+	"type": "module",
 	"types": "./types/index.d.ts",
 	"exports": {
 		".": {
-			"types": "./types/index.d.ts",
-			"import": "./esm/index.mjs",
-			"require": "./cjs/index.cjs"
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
 		},
-		"./cjs": {
-			"types": "./types/index.d.ts",
-			"import": "./cjs/index.cjs",
-			"require": "./cjs/index.cjs"
+		"./min": {
+			"import": "./dist/index.min.js",
+			"require": "./dist/index.min.cjs"
 		},
-		"./esm": {
-			"types": "./types/index.d.ts",
-			"import": "./esm/index.mjs",
-			"require": "./esm/index.mjs"
+		"./*": {
+			"import": "./dist/*.js",
+			"require": "./dist/*.cjs"
 		},
-		"./system": {
-			"types": "./types/system.d.ts",
-			"import": "./esm/system.mjs",
-			"require": "./cjs/system.cjs"
-		},
-		"./cjs/system": {
-			"types": "./types/system.d.ts",
-			"import": "./cjs/system.cjs",
-			"require": "./cjs/system.cjs"
-		},
-		"./esm/system": {
-			"types": "./types/system.d.ts",
-			"import": "./esm/system.mjs",
-			"require": "./esm/system.mjs"
+		"./min/*": {
+			"import": "./dist/*.min.js",
+			"require": "./dist/*.min.cjs"
 		}
 	},
 	"files": [
-		"cjs/*.cjs",
-		"esm/*.mjs",
-		"types/*.d.ts"
+		"dist"
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/johnsoncodehk/signals.git"
+		"url": "git+https://github.com/substrate-system/signals.git"
 	},
 	"scripts": {
-		"prepublishOnly": "npm run check && npm run test",
 		"check": "tsc --noEmit",
-		"build": "node ./build.js",
+		"//build": "node ./build.js",
+		"build": "mkdir -p ./dist && rm -rf ./dist/* && npm run build-cjs && npm run build-esm && npm run build-esm:min && npm run build-cjs:min",
+		"build-cjs": "esbuild src/*.ts --format=cjs --keep-names --tsconfig=tsconfig.build.json --outdir=./dist --out-extension:.js=.cjs --sourcemap",
+		"build-cjs:min": "esbuild src/*.ts --format=cjs --minify --keep-names --tsconfig=tsconfig.build.json --outdir=./dist --out-extension:.js=.min.cjs --sourcemap",
+		"build-esm": "esbuild src/*.ts --format=esm --metafile=dist/meta.json --keep-names --tsconfig=tsconfig.build.json --outdir=./dist --sourcemap && tsc --emitDeclarationOnly --project tsconfig.build.json --outDir dist",
+		"build-esm:min": "esbuild ./src/*.ts --format=esm --keep-names --bundle --tsconfig=tsconfig.build.json --minify --out-extension:.js=.min.js --outdir=./dist --sourcemap",
 		"test": "npm run build && vitest run",
 		"lint": "tsslint --project tsconfig.json",
 		"bench": "npm run build && node --jitless --expose-gc benchs/propagate.mjs",
-		"memory": "npm run build && node --expose-gc benchs/memoryUsage.mjs"
+		"memory": "npm run build && node --expose-gc benchs/memoryUsage.mjs",
+		"version": "npm run toc && auto-changelog -p --template keepachangelog --breaking-pattern 'BREAKING CHANGE:' && git add CHANGELOG.md README.md",
+		"preversion": "npm run lint",
+		"postversion": "git push --follow-tags && npm publish",
+		"prepublishOnly": "npm run build"
 	},
 	"devDependencies": {
 		"@tsslint/cli": "latest",
 		"@tsslint/config": "latest",
+		"esbuild": "^0.25.4",
+		"jest-extended": "latest",
 		"mitata": "latest",
 		"typescript": "latest",
-		"vitest": "latest",
-		"jest-extended": "latest"
-	}
+		"vitest": "latest"
+	},
+	"license": "MIT"
 }

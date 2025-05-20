@@ -24,6 +24,13 @@ Even though Vue 3.4 is already optimized, alien-signals is still noticeably fast
 
 > Benchmark repo: https://github.com/transitive-bullshit/js-reactivity-benchmark
 
+<details><summary><h2>Contents</h2></summary>
+<!-- toc -->
+</details>
+
+## fork
+This is a fork of [stackblitz/alien-signals](https://github.com/stackblitz/alien-signals).
+
 ## Background
 
 I spent considerable time [optimizing Vue 3.4’s reactivity system](https://github.com/vuejs/core/pull/5912), gaining experience along the way. Since Vue 3.5 [switched to a pull-based algorithm similar to Preact](https://github.com/vuejs/core/pull/10397), I decided to continue researching a push-pull based implementation in a separate project. Our end goal is to implement fully incremental AST parsing and virtual code generation in Vue language tools, based on alien-signals.
