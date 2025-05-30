@@ -1,10 +1,6 @@
-import { expect, test, vi, describe } from 'vitest'
+import { test } from '@substrate-system/tapzero'
+import { expect, vi, describe } from 'vitest'
 import { computed, effect, signal } from '../src'
-
-// To give access to .toHaveBeenCalledBefore()
-import * as matchers from 'jest-extended'
-
-expect.extend(matchers)
 
 /** Tests adopted with thanks from preact-signals implementation at
  * https://github.com/preactjs/signals/blob/main/packages/core/test/signal.test.tsx

@@ -20,8 +20,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-
-      # install pnpm
       - run: npm install
       - run: npm run build
       - run: npm run lint
