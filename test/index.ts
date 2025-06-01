@@ -1,5 +1,4 @@
-import { test } from '@substrate-system/tapzero'
-import { expect, vi, describe } from 'vitest'
+import { expect, test, vi, describe } from 'vitest'
 import { computed, effect, signal } from '../src'
 
 /** Tests adopted with thanks from preact-signals implementation at
