@@ -1,5 +1,5 @@
 {
-	"name": "@substrate-system/alien-signals",
+	"name": "@substrate-system/signals",
 	"version": "2.0.5",
 	"description": "The lightest signal library.",
 	"type": "module",
