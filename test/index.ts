@@ -1,7 +1,8 @@
 import { expect, test, vi, describe } from 'vitest'
 import { computed, effect, signal } from '../src'
 
-/** Tests adopted with thanks from preact-signals implementation at
+/**
+ * Tests adopted with thanks from preact-signals implementation at
  * https://github.com/preactjs/signals/blob/main/packages/core/test/signal.test.tsx
  *
  * The MIT License (MIT)

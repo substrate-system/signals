@@ -38,8 +38,9 @@
 		"build-esm": "esbuild src/*.ts --format=esm --metafile=dist/meta.json --keep-names --tsconfig=tsconfig.build.json --outdir=./dist --sourcemap && tsc --emitDeclarationOnly --project tsconfig.build.json --outDir dist",
 		"build-esm:min": "esbuild ./src/*.ts --format=esm --keep-names --bundle --tsconfig=tsconfig.build.json --minify --out-extension:.js=.min.js --outdir=./dist --sourcemap",
 		"build-tests": "esbuild test/index.ts --target=es2020 --bundle --keep-names > test/test-bundle.js",
+		"tapzero": "esbuild --bundle --keep-names --target=es2020 ./tapzero/index.ts | node | tap-spec",
 		"test": "npm run build && vitest run",
-		"test-tape-run": "cat test/index.html | tape-run --input=html --static=test | tap-spec",
+		"test-tape-run": "cat tapzero/index.html | tape-run --input=html --static=tapzero | tap-spec",
 		"bench": "npm run build && node --jitless --expose-gc benchs/propagate.mjs",
 		"memory": "npm run build && node --expose-gc benchs/memoryUsage.mjs",
 		"version": "npm run toc && auto-changelog -p --template keepachangelog --breaking-pattern 'BREAKING CHANGE:' && git add CHANGELOG.md README.md",
@@ -48,6 +49,7 @@
 		"prepublishOnly": "npm run build"
 	},
 	"devDependencies": {
+		"@substrate-system/tapzero": "^0.10.15",
 		"@types/node": "^22.15.21",
 		"@typescript-eslint/eslint-plugin": "^8.32.1",
 		"@typescript-eslint/parser": "^8.32.1",
@@ -55,6 +57,7 @@
 		"eslint": "^8.57.1",
 		"eslint-config-standard": "^17.1.0",
 		"mitata": "^1.0.34",
+		"tap-spec": "^5.0.0",
 		"tape-run": "^11.0.0",
 		"typescript": "^5.8.3",
 		"vitest": "^3.1.4"

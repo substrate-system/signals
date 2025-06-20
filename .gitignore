@@ -3,3 +3,4 @@ cjs
 esm
 types
 dist
+tapzero/*.js
