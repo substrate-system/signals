@@ -46,6 +46,7 @@
 		"postversion": "git push --follow-tags && npm publish",
 		"prepublishOnly": "npm run build"
 	},
+	"dependencies": {},
 	"devDependencies": {
 		"@substrate-system/tapzero": "^0.10.15",
 		"@types/node": "^22.15.21",
@@ -58,9 +59,7 @@
 		"markdown-toc": "^1.2.0",
 		"mitata": "^1.0.34",
 		"tap-spec": "^5.0.0",
-		"tape-run": "^11.0.0",
-		"typescript": "^5.8.3",
-		"vitest": "^3.1.4"
+		"typescript": "^5.8.3"
 	},
 	"license": "SEE LICENSE IN LICENSE"
 }
