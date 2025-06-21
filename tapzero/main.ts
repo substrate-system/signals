@@ -300,6 +300,7 @@ test('should not update a sub if all deps unmark it', (t) => {
 })
 
 test('should keep graph consistent on errors during activation', (t) => {
+    t.plan(2)
     const a = signal(0)
     const b = computed(() => {
         throw new Error('fail')
@@ -313,6 +314,7 @@ test('should keep graph consistent on errors during activation', (t) => {
 })
 
 test('should keep graph consistent on errors in computeds', (t) => {
+    t.plan(3)
     const a = signal(0)
     const b = computed(() => {
         if (a() === 1) throw new Error('fail')
