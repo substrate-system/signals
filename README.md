@@ -31,7 +31,22 @@ share similar algorithms, they’re quite comparable.)
 This is a fork of [stackblitz/alien-signals](https://github.com/stackblitz/alien-signals).
 
 <details><summary><h2>Contents</h2></summary>
+
 <!-- toc -->
+
+- [Install](#install)
+- [Derived Projects](#derived-projects)
+- [Adoption](#adoption)
+- [Usage](#usage)
+  * [Basic APIs](#basic-apis)
+  * [Effect Scope](#effect-scope)
+  * [Creating Your Own Surface API](#creating-your-own-surface-api)
+- [About `propagate` and `checkDirty` functions](#about-propagate-and-checkdirty-functions)
+  * [`propagate`](#propagate)
+  * [`checkDirty`](#checkdirty)
+
+<!-- tocstop -->
+
 </details>
 
 ## Install
