@@ -1,6 +1,4 @@
 node_modules
-cjs
-esm
-types
 dist
-tapzero/*.js
+.DS_Store
+.env

@@ -4,6 +4,9 @@
 	"description": "The lightest signal library.",
 	"type": "module",
 	"types": "./types/index.d.ts",
+	"files": [
+		"dist"
+	],
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
@@ -23,9 +26,6 @@
 			"require": "./dist/*.min.cjs"
 		}
 	},
-	"files": [
-		"dist"
-	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/substrate-system/signals.git"
