@@ -1,48 +1,36 @@
-<p align="center">
-	<img src="assets/logo.png" width="250"><br>
-<p>
+# signals
 
-<p align="center">
-	<a href="https://npmjs.com/package/alien-signals"><img src="https://badgen.net/npm/v/alien-signals" alt="npm package"></a>
-	<a href="https://deepwiki.com/stackblitz/alien-signals"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
-</p>
-
-# alien-signals
-
-This project explores a push-pull based signal algorithm. Its current implementation is similar to or related to certain other frontend projects:
+This project explores a push-pull based signal algorithm. Its current
+implementation is similar to or related to certain other frontend projects:
 
 - Propagation algorithm of Vue 3
 - Preact’s double-linked-list approach (https://preactjs.com/blog/signal-boosting/)
 - Inner effects scheduling of Svelte
 - Graph-coloring approach of Reactively (https://milomg.dev/2022-12-01/reactivity)
 
-We impose some constraints (such as not using Array/Set/Map and disallowing function recursion) to ensure performance. We found that under these conditions, maintaining algorithmic simplicity offers more significant improvements than complex scheduling strategies.
-
-Even though Vue 3.4 is already optimized, alien-signals is still noticeably faster. (I wrote code for both, and since they share similar algorithms, they’re quite comparable.)
-
-<img width="1210" alt="Image" src="https://github.com/user-attachments/assets/88448f6d-4034-4389-89aa-9edf3da77254" />
+We impose some constraints (such as not using Array/Set/Map and disallowing
+function recursion) to ensure performance. We found that under these conditions,
+maintaining algorithmic simplicity offers more significant improvements than
+complex scheduling strategies.  Even though Vue 3.4 is already optimized,
+alien-signals is still noticeably faster. (I wrote code for both, and since they
+share similar algorithms, they’re quite comparable.)
 
 > Benchmark repo: https://github.com/transitive-bullshit/js-reactivity-benchmark
+
+## fork
+
+This is a fork of [stackblitz/alien-signals](https://github.com/stackblitz/alien-signals).
 
 <details><summary><h2>Contents</h2></summary>
 <!-- toc -->
 </details>
 
-## fork
-This is a fork of [stackblitz/alien-signals](https://github.com/stackblitz/alien-signals).
+## Install
 
-## Background
+```sh
+npm i -S @susbtrate-system/signals
+```
 
-I spent considerable time [optimizing Vue 3.4’s reactivity system](https://github.com/vuejs/core/pull/5912), gaining experience along the way. Since Vue 3.5 [switched to a pull-based algorithm similar to Preact](https://github.com/vuejs/core/pull/10397), I decided to continue researching a push-pull based implementation in a separate project. Our end goal is to implement fully incremental AST parsing and virtual code generation in Vue language tools, based on alien-signals.
-
-## Other Language Implementations
-
-- **Dart:** [medz/alien-signals-dart](https://github.com/medz/alien-signals-dart) <sup>2.0.5</sup>
-- **Lua:** [YanqingXu/alien-signals-in-lua](https://github.com/YanqingXu/alien-signals-in-lua) <sup>2.0.5</sup>
-- **Luau:** [Nicell/alien-signals-luau](https://github.com/Nicell/alien-signals-luau) <sup>1.0.13</sup>
-- **Java:** [CTRL-Neo-Studios/java-alien-signals](https://github.com/CTRL-Neo-Studios/java-alien-signals) <sup>1.0.13</sup>
-- **C#:** [CTRL-Neo-Studios/csharp-alien-signals](https://github.com/CTRL-Neo-Studios/csharp-alien-signals) <sup>1.0.13</sup>
-- **Go:** [delaneyj/alien-signals-go](https://github.com/delaneyj/alien-signals-go) <sup>1.0.7</sup>
 
 ## Derived Projects
 
@@ -55,68 +43,80 @@ I spent considerable time [optimizing Vue 3.4’s reactivity system](https://git
 
 ## Adoption
 
-- [vuejs/core](https://github.com/vuejs/core): The core algorithm has been ported to v3.6 (PR: https://github.com/vuejs/core/pull/12349)
-- [statelyai/xstate](https://github.com/statelyai/xstate): The core algorithm has been ported to implement the atom architecture (PR: https://github.com/statelyai/xstate/pull/5250)
-- [flamrdevs/xignal](https://github.com/flamrdevs/xignal): Infrastructure for the reactive system
-- [vuejs/language-tools](https://github.com/vuejs/language-tools): Used in the language-core package for virtual code generation
+- [vuejs/core](https://github.com/vuejs/core): The core algorithm has been
+  ported to v3.6 (PR: https://github.com/vuejs/core/pull/12349)
+- [statelyai/xstate](https://github.com/statelyai/xstate): The core algorithm
+  has been ported to implement the atom architecture
+  (PR: https://github.com/statelyai/xstate/pull/5250)
+- [flamrdevs/xignal](https://github.com/flamrdevs/xignal): Infrastructure
+  for the reactive system
+- [vuejs/language-tools](https://github.com/vuejs/language-tools): Used
+  in the language-core package for virtual code generation
 
 ## Usage
 
-#### Basic APIs
+### Basic APIs
 
 ```ts
-import { signal, computed, effect } from 'alien-signals';
+import { signal, computed, effect } from '@substrate-system/signals';
 
 const count = signal(1);
 const doubleCount = computed(() => count() * 2);
 
 effect(() => {
   console.log(`Count is: ${count()}`);
-}); // Console: Count is: 1
+});  // Console: Count is: 1
 
 console.log(doubleCount()); // 2
 
-count(2); // Console: Count is: 2
+count(2);  // Console: Count is: 2
 
-console.log(doubleCount()); // 4
+console.log(doubleCount());  // 4
 ```
 
-#### Effect Scope
+### Effect Scope
 
 ```ts
-import { signal, effect, effectScope } from 'alien-signals';
+import { signal, effect, effectScope } from '@substrate-system/signals';
 
 const count = signal(1);
 
 const stopScope = effectScope(() => {
   effect(() => {
     console.log(`Count in scope: ${count()}`);
-  }); // Console: Count in scope: 1
+  });  // Console: Count in scope: 1
 });
 
-count(2); // Console: Count in scope: 2
+count(2);  // Console: Count in scope: 2
 
 stopScope();
 
-count(3); // No console output
+count(3);  // No console output
 ```
 
-#### Creating Your Own Surface API
+### Creating Your Own Surface API
 
-You can reuse alien-signals’ core algorithm via `createReactiveSystem()` to build your own signal API. For implementation examples, see:
+You can reuse alien-signals’ core algorithm via `createReactiveSystem()` to
+build your own signal API. For implementation examples, see:
 
-- [Starter template](https://github.com/johnsoncodehk/alien-signals-starter) (implements  `.get()` & `.set()` methods like the [Signals proposal](https://github.com/tc39/proposal-signals))
+- [Starter template](https://github.com/johnsoncodehk/alien-signals-starter)
+  (implements  `.get()` & `.set()` methods like the
+  [Signals proposal](https://github.com/tc39/proposal-signals))
 - [stackblitz/alien-signals/src/index.ts](https://github.com/stackblitz/alien-signals/blob/master/src/index.ts)
 - [proposal-signals/signal-polyfill#44](https://github.com/proposal-signals/signal-polyfill/pull/44)
 
 
 ## About `propagate` and `checkDirty` functions
 
-In order to eliminate recursive calls and improve performance, we record the last link node of the previous loop in `propagate` and `checkDirty` functions, and implement the rollback logic to return to this node.
+In order to eliminate recursive calls and improve performance, we record the
+last link node of the previous loop in `propagate` and `checkDirty` functions,
+and implement the rollback logic to return to this node.
 
-This results in code that is difficult to understand, and you don't necessarily get the same performance improvements in other languages, so we record the original implementation without eliminating recursive calls here for reference.
+This results in code that is difficult to understand, and you don't necessarily
+get the same performance improvements in other languages, so we record the
+original implementation without eliminating recursive calls here for reference.
 
-#### `propagate`
+### `propagate`
 
 ```ts
 function propagate(link: Link): void {
@@ -156,7 +156,7 @@ function propagate(link: Link): void {
 }
 ```
 
-#### `checkDirty`
+### `checkDirty`
 
 ```ts
 function checkDirty(link: Link, sub: ReactiveNode): boolean {

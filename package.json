@@ -39,7 +39,7 @@
 		"build-esm:min": "esbuild ./src/*.ts --format=esm --keep-names --bundle --tsconfig=tsconfig.build.json --minify --out-extension:.js=.min.js --outdir=./dist --sourcemap",
 		"build-tests": "esbuild test/index.ts --target=es2020 --bundle --keep-names > test/test-bundle.js",
 		"tapzero": "esbuild --bundle --keep-names --target=es2020 ./tapzero/index.ts | node | tap-spec",
-		"test": "npm run build && vitest run",
+		"test": "npm run build && esbuild --bundle --keep-names --target=es2020 ./test/index.ts | node | tap-spec",
 		"test-tape-run": "cat tapzero/index.html | tape-run --input=html --static=tapzero | tap-spec",
 		"bench": "npm run build && node --jitless --expose-gc benchs/propagate.mjs",
 		"memory": "npm run build && node --expose-gc benchs/memoryUsage.mjs",
